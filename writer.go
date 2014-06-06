@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -38,7 +39,9 @@ func main() {
 }
 
 func addTemperature(c redis.Conn, temp int) {
-	_, err := c.Do("LPUSH", "temperatures", temp)
+	data, _ := json.Marshal(TemperatureRecord{temp, time.Now()})
+
+	_, err := c.Do("LPUSH", "temperatures", data)
 
 	if err != nil {
 		log.Fatal(err)
@@ -65,4 +68,9 @@ func createRedisConnection(address string) redis.Conn {
 
 type UpdateMessage struct {
 	Temperature int
+}
+
+type TemperatureRecord struct {
+	Temperature int
+	Date        time.Time
 }
