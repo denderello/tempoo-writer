@@ -25,9 +25,8 @@ func main() {
 			json.Unmarshal(v.Data, &update)
 
 			updateConn := createRedisConnection(":6379")
-			defer updateConn.Close()
-
 			addTemperature(updateConn, update.Temperature)
+			updateConn.Close()
 		case redis.Subscription:
 			fmt.Println("Subscribed to temperature update channel")
 		case error:
