@@ -39,7 +39,7 @@ func main() {
 }
 
 func addTemperature(c redis.Conn, temp int) {
-	data, _ := json.Marshal(TemperatureRecord{temp, time.Now()})
+	data, _ := json.Marshal(TemperatureRecord{temp, time.Now().Unix()})
 
 	_, err := c.Do("LPUSH", "temperatures", data)
 
@@ -72,5 +72,5 @@ type UpdateMessage struct {
 
 type TemperatureRecord struct {
 	Temperature int
-	Date        time.Time
+	Date        int64
 }
